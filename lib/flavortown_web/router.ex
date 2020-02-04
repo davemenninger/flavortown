@@ -20,7 +20,8 @@ defmodule FlavortownWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", FlavortownWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", FlavortownWeb do
+    pipe_through :api
+    post "/payload", WebhookController, :receive
+  end
 end
