@@ -11,7 +11,7 @@ defmodule Flavortown do
     case ref do
       "refs/heads/master" ->
         case Flavortown.lookup_url(url) do
-          {:ok, _flavor} -> IO.puts("alright, we know how to deploy this")
+          {:ok, flavor} -> Flavortown.enqueue_stack_update(ref: ref, url: url, flavor: flavor)
           {:error, _} -> IO.puts("bad url")
         end
 
@@ -22,11 +22,15 @@ defmodule Flavortown do
 
   def lookup_url(url) do
     case url do
-      "https://github.com/davemenninger/flavortown" ->
-        {:ok, "herp"}
+      "https://github.com/davemenninger/flavortown" -> {:ok, :default}
+      _ -> {:error, :unknown}
+    end
+  end
 
-      _ ->
-        {:error, "derp"}
+  def enqueue_stack_update(ref: ref, url: url, flavor: flavor) do
+    case flavor do
+      :default -> IO.puts(Flavortown.Flavors.Default.generate_stack(ref: ref, url: url)) # hand this stack definition over to a deploying queue
+      _ -> {:error, "unknown flavor"}
     end
   end
 end
