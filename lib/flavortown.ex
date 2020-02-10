@@ -7,30 +7,23 @@ defmodule Flavortown do
   if it comes from the database, an external API or others.
   """
 
-  def receive(%{url: url, ref: ref}) do
-    case ref do
-      "refs/heads/master" ->
-        case Flavortown.lookup_url(url) do
-          {:ok, flavor} -> Flavortown.enqueue_stack_update(ref: ref, url: url, flavor: flavor)
-          {:error, _} -> IO.puts("bad url")
-        end
+  # TODO: you'd actually get this from the db
+  @my_apps %{
+    %{url: "https://github.com/davemenninger/flavortown", ref: "refs/heads/master"} => :default
+  }
 
-      _ ->
-        IO.puts("bad ref")
-    end
+  def receive(%{url: _url, ref: _ref} = update) do
+    update
+    |> Flavortown.lookup()
+    |> Flavortown.enqueue_update()
   end
 
-  def lookup_url(url) do
-    case url do
-      "https://github.com/davemenninger/flavortown" -> {:ok, :default}
-      _ -> {:error, :unknown}
-    end
+  def lookup(%{url: _url, ref: _ref} = update) do
+    update
+    |> Map.put(:flavor, @my_apps[update])
   end
 
-  def enqueue_stack_update(ref: ref, url: url, flavor: flavor) do
-    case flavor do
-      :default -> IO.puts(Flavortown.Flavors.Default.generate_stack(ref: ref, url: url)) # hand this stack definition over to a deploying queue
-      _ -> {:error, "unknown flavor"}
-    end
+  def enqueue_update(%{ref: _ref, url: _url, flavor: _flavor} = update) do
+    Flavortown.DeployQueue.enqueue(update)
   end
 end

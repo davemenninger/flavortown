@@ -11,9 +11,10 @@ defmodule Flavortown.Application do
       # Start the Ecto repository
       Flavortown.Repo,
       # Start the endpoint when the application starts
-      FlavortownWeb.Endpoint
+      FlavortownWeb.Endpoint,
       # Starts a worker by calling: Flavortown.Worker.start_link(arg)
       # {Flavortown.Worker, arg},
+      Flavortown.DeployQueue
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
