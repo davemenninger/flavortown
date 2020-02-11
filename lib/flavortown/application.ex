@@ -14,7 +14,8 @@ defmodule Flavortown.Application do
       FlavortownWeb.Endpoint,
       # Starts a worker by calling: Flavortown.Worker.start_link(arg)
       # {Flavortown.Worker, arg},
-      Flavortown.DeployQueue
+      Flavortown.DeployQueue,
+      Flavortown.DeployWorker
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -9,7 +9,7 @@ defmodule Flavortown do
 
   # TODO: you'd actually get this from the db
   @my_apps %{
-    %{url: "https://github.com/davemenninger/flavortown", ref: "refs/heads/master"} => :default
+    %{url: "https://github.com/davemenninger/flavortown", ref: "refs/heads/master"} => Flavortown.Flavors.Default
   }
 
   def receive(%{url: _url, ref: _ref} = update) do

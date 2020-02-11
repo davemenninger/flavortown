@@ -25,7 +25,9 @@ defmodule Flavortown.DeployQueue do
 
   @impl true
   def handle_call({:dequeue}, _from, queue) do
-    {{:value, head}, queue} = :queue.out(queue)
-    {:reply, head, queue}
+    case :queue.out(queue) do
+      {{:value, head}, queue} -> {:reply, head, queue}
+      {:empty, queue} -> {:reply, nil, queue}
+    end
   end
 end
