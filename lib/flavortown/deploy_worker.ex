@@ -16,6 +16,8 @@ defmodule Flavortown.DeployWorker do
     # Do the desired work here
     IO.puts("worker checking for work")
 
+    IO.puts("queue length: " <> Integer.to_string(Flavortown.DeployQueue.length()))
+
     case Flavortown.DeployQueue.dequeue() do
       %{flavor: _flavor, url: _url, ref: _ref} = task -> deploy(task)
       nil -> IO.puts("no work")
